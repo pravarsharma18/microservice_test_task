@@ -1,0 +1,75 @@
+version: "3.9"
+services:
+  db_flask:
+    image: postgres
+    restart: always
+    env_file: ./.env-db-flask
+    expose:
+      - 5433
+    ports:
+      - 5433:5433
+    volumes:
+      - postgres_data_flask:/opt/lib/postgresql/data/
+  db_django:
+    image: postgres
+    restart: always
+    env_file: ./.env-db-django
+    expose:
+      - 5434
+    ports:
+      - 5434:5434
+    volumes:
+      - postgres_data_django:/opt/lib/postgresql/data/
+  dj_micro:
+    build:
+      context: ./dj_micro
+      dockerfile: Dockerfile.django-app
+    environment:
+      - PORT=8000
+    env_file:
+      - ./dj_micro/.env-dj
+      - ./.env-db-django
+    expose:
+      - 8000
+    volumes:
+      - ./dj_micro/staticfiles:/app/staticfiles/
+    depends_on:
+      - db_django
+  f_micro:
+    build:
+      context: ./f_micro
+      dockerfile: Dockerfile.flask-app
+    environment:
+      - PORT=8001
+    env_file:
+      - ./f_micro/.env
+      - ./.env-db-flask
+    volumes:
+      - ./data:/app/data
+      - mydatavol:/app/mydatavol
+    expose:
+      - 8001
+    depends_on:
+      - db_flask
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.nginx
+    ports:
+      - 8000:80
+    volumes:
+      - ./staticfiles:/www/static/
+    depends_on:
+      - dj_micro
+      - f_micro
+      - db_flask
+      - db_django
+
+volumes:
+  postgres_data_django:
+  postgres_data_flask:
+  data:
+    external: true
+  staticfiles:
+    external: true
+  mydatavol:
