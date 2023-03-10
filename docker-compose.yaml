@@ -1,73 +1,71 @@
-version: "3.9"
+version: '3.9'
 services:
-  db_flask:
-    image: postgres
-    restart: always
-    hostname: postgres
-    container_name: db_flask
-    env_file: ./.env-db-flask
-    expose:
-      - 5432
-    volumes:
-      - postgres_data_flask:/opt/lib/postgresql/data/
-  db_django:
-    image: postgres
-    restart: always
-    hostname: postgres
-    container_name: db_django
-    env_file: ./.env-db-django
-    expose:
-      - 5433
-    volumes:
-      - postgres_data_django:/opt/lib/postgresql/data/
-  dj_micro:
-    build:
-      context: ./dj_micro
-      dockerfile: Dockerfile.django-app
-    environment:
-      - PORT=8002
-    env_file:
-      - ./dj_micro/.env-dj
-      - ./.env-db-django
-    expose:
-      - 8002
-    volumes:
-      - ./staticfiles:/app/staticfiles/
-    depends_on:
-      - db_django
-  f_micro:
-    build:
-      context: ./f_micro
-      dockerfile: Dockerfile.flask-app
-    environment:
-      - PORT=8001
-    env_file:
-      - ./f_micro/.env
-      - ./.env-db-flask
-    volumes:
-      - ./data:/app/data
-      - mydatavol:/app/mydatavol
-    expose:
-      - 8001
-    depends_on:
-      - db_flask
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.nginx
-    ports:
-      - 8080:80
-    volumes:
-      - ./staticfiles:/www/static/
-    depends_on:
-      - dj_micro
-      - f_micro
+    db_flask:
+        image: postgres
+        restart: always
+        env_file: .env-db-flask
+        expose: 
+            - 5432
+        volumes: 
+            - postgres_data_flask:/var/lib/postgresql/data/
+    db_django:
+        image: postgres
+        restart: always
+        env_file: .env-db-django
+        expose: 
+            - 5432
+        volumes: 
+            - postgres_data_django:/var/lib/postgresql/data/
+    f_micro:
+        build:
+            context: ./f_micro
+            dockerfile: Dockerfile.flask-app
+        environment: 
+            - PORT=8001
+        env_file: 
+            - ./f_micro/.env
+            - ./.env-db-flask
+        expose: 
+            - 8001
+        volumes: 
+            - ./staticfiles:/app/staticfiles/
+        depends_on: 
+            - db_flask
+    dj_micro:
+        build:
+            context: ./dj_micro
+            dockerfile: Dockerfile.django-app
+        command: ./run.sh
+        environment: 
+            - PORT=8002
+        env_file: 
+            - ./dj_micro/.env-dj
+            - ./.env-db-django
+        expose: 
+            - 8002
+        volumes: 
+            - ./staticfiles:/app/staticfiles/
+        depends_on:
+            - db_django
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile.nginx
+        ports:
+            - 8080:80
+        volumes: 
+            - ./staticfiles:/www/static/
+        depends_on: 
+            - db_flask
+            - db_django
+            - f_micro
+            - dj_micro
 
-volumes:
-  postgres_data_django:
-  postgres_data_flask:
-  data:
-    external: true
-  staticfiles:
-    external: true
-  mydatavol:
+volumes: 
+    postgres_data_flask:
+    postgres_data_django:
+    data:
+        external: true
+    staticfiles:
+        external: true
+    mydatavol:
