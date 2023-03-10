@@ -3,21 +3,21 @@ services:
   db_flask:
     image: postgres
     restart: always
+    hostname: postgres
+    container_name: db_flask
     env_file: ./.env-db-flask
     expose:
-      - 5433
-    ports:
-      - 5433:5433
+      - 5432
     volumes:
       - postgres_data_flask:/opt/lib/postgresql/data/
   db_django:
     image: postgres
     restart: always
+    hostname: postgres
+    container_name: db_django
     env_file: ./.env-db-django
     expose:
-      - 5434
-    ports:
-      - 5434:5434
+      - 5433
     volumes:
       - postgres_data_django:/opt/lib/postgresql/data/
   dj_micro:
@@ -25,14 +25,14 @@ services:
       context: ./dj_micro
       dockerfile: Dockerfile.django-app
     environment:
-      - PORT=8000
+      - PORT=8002
     env_file:
       - ./dj_micro/.env-dj
       - ./.env-db-django
     expose:
-      - 8000
+      - 8002
     volumes:
-      - ./dj_micro/staticfiles:/app/staticfiles/
+      - ./staticfiles:/app/staticfiles/
     depends_on:
       - db_django
   f_micro:
@@ -56,14 +56,12 @@ services:
       context: ./nginx
       dockerfile: Dockerfile.nginx
     ports:
-      - 8000:80
+      - 8080:80
     volumes:
       - ./staticfiles:/www/static/
     depends_on:
       - dj_micro
       - f_micro
-      - db_flask
-      - db_django
 
 volumes:
   postgres_data_django:

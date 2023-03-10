@@ -163,3 +163,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
+
+URL_PREFIX = "dj_micro"
+
+CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0:8080', 'http://127.0.0.1:8080']

@@ -10,4 +10,4 @@ app = Flask(__name__)
 app.register_blueprint(p_blueprint)
 
 if __name__ == "__main__":
-    app.run(port=8001)
+    app.run()

@@ -10,9 +10,6 @@ RUN /opt/venv-django/bin/pip install pip --upgrade && \
 
 COPY . .
 
-RUN pip install pip --upgrade
-RUN pip install -r requirements.txt
-
 RUN chmod +x run.sh
 
 CMD ["./run.sh"]
