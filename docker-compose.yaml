@@ -60,6 +60,15 @@ services:
             - db_django
             - f_micro
             - dj_micro
+        networks:
+            default:
+                ipv4_address: 13.234.78.130
+
+    networks:
+        default:
+            ipam:
+                config:
+                    - subnet: 172.31.32.0/20
 
 volumes: 
     postgres_data_flask:
