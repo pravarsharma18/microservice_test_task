@@ -166,4 +166,4 @@ AUTH_USER_MODEL = "users.User"
 
 URL_PREFIX = "dj_micro"
 
-CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0:8080', 'http://127.0.0.1:8080']
+CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0:8080', 'http://127.0.0.1:8080', 'http://13.234.78.130:8080']
