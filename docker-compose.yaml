@@ -64,12 +64,12 @@ services:
             my-network:
                 ipv4_address: 13.234.78.130
 
-    networks:
-        my-network:
-            ipam:
-                driver: default
-                config:
-                    - subnet: 172.31.32.0/20
+networks:
+    my-network:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.31.32.0/20
 
 volumes: 
     postgres_data_flask:
