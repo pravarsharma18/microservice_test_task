@@ -62,7 +62,7 @@ services:
             - dj_micro
         networks:
             my-network:
-                ipv4_address: 13.234.78.130
+                ipv4_address: 172.31.43.169
 
 networks:
     my-network:
