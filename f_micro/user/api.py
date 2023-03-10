@@ -44,12 +44,12 @@ class UserView(Resource):
                 "username": response.get('username'),   # from django server
                 "first_name": response.get('first_name'),
                 "last_name": response.get('last_name'),
-                },
+            },
             "flask": {
                 "username": data.get('username'),   # from django server
                 "first_name": data.get('first_name'),
                 "last_name": data.get('last_name'),
-                }
+            }
         }
 
         response = jsonify(result)
